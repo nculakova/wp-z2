@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: sablona-bp.xml,v 1.3 2006/04/22 09:47:36 jkj Exp $ -->
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+"http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
+<book lang="en">
+  <bookinfo>
+    <title>Web site users’ behavioral trends analysis</title>
+
+    <subtitle>Bachelor thesis</subtitle>
+
+    <author>
+      <firstname>Natália</firstname>
+
+      <surname>Čuláková</surname>
+
+      <affiliation>
+        <orgname>Slovak Technical University
+		in Bratislava</orgname>		
+
+        <orgdiv role="fakulta">Faculty of Informatics and Information Technology</orgdiv>
+
+        <orgdiv role="katedra">Institute of Informatics, Information Systems and Software Engineering</orgdiv>
+      </affiliation>
+    </author>
+
+    <othername role="vedouci">Ing. Ondrej Kaššák</othername>
+
+    <pubdate>march 2017</pubdate>
+
+    <abstract labg="sk">
+      <title>Anotácia</title>
+		<simpara>Slovenská technická univerzita v Bratislave</simpara> 
+		<simpara>FAKULTA INFORMATIKY A INFORMAČNÝCH TECHNOLÓGIÍ</simpara> 
+		<simpara>Študijný program: Informatika</simpara> 
+		<simpara>Autor: Natália Čuláková</simpara> 
+		<simpara>Bakalárska práca: Analýza trendov v správaní používatel’ov webového sídla</simpara> 
+		<simpara>Vedúci práce: Ing. Ondrej Kaššák</simpara> 
+		<simpara>Január, 2016/2017</simpara>
+
+		<simpara>Správanie používateľov je veľmi individuálne. Ak však zoberieme do úvahy dostatočne veľké množstvo používateľov, ich správanie začne podliehať určitým trendom správania. V tejto práci sa zaoberáme identifikáciou takýchto trendov u používateľov webového sídla. Túto identifikáciu trendov robíme pomocou hľadania častých vzorov. Keďže pracujeme s webovými sídlami dáta prichádzajú ako rýchle a objemné prúdy, ktoré je náročné spracovať. Preto sa v práci zameriavame na jednoprechodové algoritmy na spracovanie prúdov dát.</simpara>
+		<simpara>Takáto analýza dát môže pomôcť lepšie spoznať používateľov webového sídla a za pomoci týchto informácií lepšie prispôsobiť webstránku podľa trendov.</simpara>
+		<simpara>V práci sme analyzovali súčasné prístupy k dolovaniu častých vzorov v dátových tokoch. Na základe existujúcich algoritmov navrhujeme vlastný, jednoprechodový algoritmus, zameraný na hľadanie frekventovaných množín v dátach z vybraného webového sídla. V algoritme sa zameriavame na zmeny počas nejakého časového obdobia. Tento algoritmus overujeme v doméne eshopu so zľavovými kupónmi prostredníctvom rôznych úloh. Algoritmus sa taktiež pokúšame spraviť doménovo nezávislý. Na záver sa snažíme predvídať budúce správanie používateľov webových stránok zo štatistiky zo zhromaždených z dát.</simpara> 
+    </abstract>
+
+    <abstract lang="en">
+      <title>Annotation</title>
+	  <simpara>Slovak University of Technology Bratislav</simpara> 
+		<simpara>FACULTY OF INFORMATICS AND INFORMATION TECHNOLOGIES </simpara> 
+		<simpara>Degree Course: Informatics</simpara> 
+		<simpara>Author: Natália Čuláková</simpara> 
+		<simpara>Bachelor thesis: Web site users’ behavioral trends analysis</simpara> 
+		<simpara>Supervisor: Ondrej Kaššák </simpara> 
+		<simpara>January, 2016/2017</simpara>
+		<simpara>User behaviour is very individual. However, if we consider a sufficiently large number of users, their behaviour will be a subject to certain trends. 
+		In this work we deal with identification of such trends among users of a web site. We identify these trends by searching for frequent patterns. 
+		Since we are working with online data these are incoming in fast and voluminous streams and are difficult to process. Therefore, the work focuses on one pass algorithms for processing data streams. </simpara>
+		<simpara>Such data analysis can help to better know the users of the web site and using this information we can better customise the website according to the users' trends.</simpara>
+		<simpara>We analyse current approaches to frequent pattern mining in data streams. Based on existing algorithms we try to design our own, one-pass 
+		algorithm aimed at finding frequent itemsets in the data from selected web site. In this algorithm we focus on changes over a period of time. 
+		We test this algorithm on a domain of e-shop with discount coupons through a variety of tasks. We also try to modify this algorithm to be domain independent. 
+		Finally, we try to predict the future behaviour of website users from the statistics gathered.</simpara>
+    </abstract>
+  </bookinfo>
+
+  <chapter id="intro">
+    <title>Introduction</title>
+
+    <para><emphasis>"We are on the verge of an era where every device is online, where sensors are ubiquitous in our world generating continuous streams of data, 
+	where the sheer volume of data offered and consumed on the Internet will increase by orders of magnitude, where the Internet of Things will produce a digital fingerprint of our world" <citation>Becker2016</citation>.
+	</emphasis></para>
+	<para>In this thesis, we are focusing on the identification of trends, in this work frequent patterns
+	<footnote><para>In the analysis of this thesis we describe several different approaches to frequent patterns but later we focus on frequent patterns as items which 
+	occur above a given support threshold.</para></footnote>
+	, in the behaviour of users and possible prediction 
+	of their future actions and trends. We analyse the manner in which users visit particular websites and in which they look them up and leave them. 
+	We are identifying the trends by frequent pattern mining, which is a part of big data analysis dealing with searching for the most frequent items in data sets. 
+	It is a well studied field of data mining but mainly for static data.
+	</para>
+	<para>However, when working with online data sources, like websites, the usual, static, algorithms are often ineffective as the data is not stored in a data warehouse. 
+	It is data that is incoming in big streams at almost all times and does not allow us to store it all, look through it later and come up with the result in the end. 
+	Which is what these algorithms for static data often do. They pass through the data multiple times to ensure exact results. But when data mining in streams we need 
+	to mine the data in online time, so we need to process the new data as it is incoming and store only the valid information about it. For this, we have to look into one pass only algorithms.
+	</para>
+	<para>Knowing your users' behaviour and being able to predict when they are most likely to visit particular website could be very useful so that the companies owning 
+	these websites could better organise the layout of the website, as well as create better targeted advertisements. It is important for website owners to know the behaviour 
+	of their users so they can offer them better service and also to make sure that their old users are not leaving their websites rather than new ones joining them. 
+	</para>
+	<para>This work is divided to few sections. In the <link linkend="first">first section</link> we focus on analysis of the given problem. We defined what frequent patterns and association rules 
+	are and we go through several <link linkend="frequent pattern mining algorithms">algorithms for frequent pattern mining</link> in data streams that are currently being used. We also cover the basis of data acquisition, 
+	the step before data analysis. We talk about the different methods and approaches when gathering and pre-processing data so that it is easy to work with.
+	</para>
+   </chapter>
+	
+	<chapter id="first">
+      <title>Frequent pattern mining</title>
+
+		<para>Frequent pattern mining<indexterm><primary>Frequent patterns</primary><secondary>frequent pattern mining</secondary></indexterm> is one of the subfields of data analysis. Its main aim is to find data items or patterns which frequently appear in a given data set. These could include frequent 
+		itemsets<indexterm><primary>Frequent patterns</primary><secondary>frequent itemsets</secondary></indexterm>, which may refer to groups of items that people often buy together, frequent subsets<indexterm><primary>Frequent patterns</primary><secondary>frequent subsets</secondary></indexterm> or sequential patterns<indexterm><primary>Sequential patterns</primary></indexterm><indexterm><primary>Frequent patterns</primary><secondary>sequential patterns</secondary></indexterm>, which might refer to items which people usually buy one after another, 
+		like buying a memory card after buying a camera, or frequent substructures<indexterm><primary>Frequent patterns</primary><secondary>frequent substructures</secondary></indexterm>, these refer to frequent graphs or trees.<citation>Aggarwal2007</citation>.
+		</para>
+		<para>We can define frequent pattern in several different ways. It could be the <emphasis>k</emphasis> most frequently appearing items in a data set or it could be all items in the given data set which have frequency 
+		above a given threshold <emphasis>t</emphasis> <citation>Aggarwal2007</citation>.
+		</para>
+		<para>We can also look at frequent patterns as items, structures (graphs or trees) or subsequences (e.g. association rules). Each of them has its own usage and few different approaches of finding them. 
+		In this work we are mainly focusing on frequent items, itemsets and possibly association rules as those are relevant to the application area we will be working with <citation>Aggarwal2007</citation>.
+		</para>
+		<para>As we are working with web sites, we have to consider the challenges of working with streaming online data. When mining data from streams the data is often incoming in huge volumes and in most cases, 
+		the streams are incoming in very fast rates. This makes it impossible to store all the data and analyse it later. We have to consider using algorithms that are very effective and very fast even if we have 
+		to sacrifice precision for speed.
+		</para>
+		<para>This makes the one pass algorithms the ideal solution for the problem as these algorithms only store the valid information while looking at each incoming element once. Based on that, most data 
+		mining algorithms are either completely ineffectual in these cases or they need to be severely adjusted to work on data streams.
+		</para>
+		<para>The second problem is, that unlike batch data, the patterns in data streams may evolve constantly, this is also called temporal locality <citation>Aggarwal2007</citation>. This makes it difficult to design 
+		the algorithms for data processing, as the straight forward answer will rarely be the effective solution to this problem. 
+		</para>
+		<para>This doesn't necessarily mean that the overcomplicated great algorithm we develop will be the best in practice. We need to consider that sometimes, it is wiser to sacrifice punctuality over effectivity. 
+		Some of the results might not be mathematically exact but the variation is negligible in the long run. 
+		</para>
+		
+		<section>
+			<title>Frequent itemsets</title>
+			<para>We can look at the definition of frequent itemset<indexterm><primary>Frequent patterns</primary><secondary>frequent itemsets</secondary></indexterm> from two slightly different angles. One of them is looking solely at the number of times an itemset appears in data stream, on the other hand we can 
+			look at it as the frequency with which the itemset appears over a given time period <citation>Yu2009</citation>
+			</para>
+			<para>With the first approach a frequent itemsets could be the <emphasis>k</emphasis> itemsets with the highest incidence rate or all of the itemsets that have an incidence rate above a given threshold
+			<emphasis>t</emphasis>. With the second approach we have to look at the support of given itemset <citation>Aggarwal2007, Yu2009</citation>.
+			</para>
+			<para>If <emphasis>S</emphasis> is a stream of data and <emphasis>X</emphasis> is an itemset of any length then the <emphasis>support</emphasis> of <emphasis>X</emphasis> is defined as the fraction of transactions in <emphasis>S</emphasis> that contain <emphasis>X</emphasis>. 
+			For a given support threshold <emphasis>t</emphasis>, <emphasis>X</emphasis> is frequent if the support of <emphasis>X</emphasis> is greater than or equal to the support threshold <emphasis>t</emphasis>, i.e. if at least <emphasis>t &#37;</emphasis> of transactions contains <emphasis>X</emphasis> <citation>Yu2009</citation>.
+			</para>
+			<para>We could also divide the itemsets into frequent, sub-frequent and infrequent itemsets<indexterm><primary>Itemset</primary><secondary>frequent itemset</secondary><secondary>infrequent itemset</secondary><secondary>sub-frequent itemset</secondary></indexterm> which could be useful later, when applying certain time relative algorithms. 
+			In that case we look at the frequency of an itemset over a time period <citation>Giannella2003</citation>.
+			</para>
+			<para>When the support of <emphasis>X</emphasis> is the <emphasis>frequency</emphasis> with which <emphasis>X</emphasis> appears over a time period <emphasis>T</emphasis> divided by the total number of incoming transactions observed over the time period <emphasis>T</emphasis>. 
+			And the relation between <emphasis>minimal support</emphasis> <emphasis>&#920;</emphasis>, the <emphasis>relaxation ratio</emphasis> <emphasis>&#961;</emphasis> and the <emphasis>maximum support error</emphasis> <emphasis>&#949;</emphasis> is  <emphasis>&#961; = &#949; / &#920;</emphasis>.
+			</para>
+			<para>Then the itemset <emphasis>X</emphasis> is <emphasis>frequent</emphasis> if it's support is greater than or equal to <emphasis>&#920;</emphasis>. It is <emphasis>sub-frequent</emphasis> if the support is less than <emphasis>&#920;</emphasis> but not less 
+			than <emphasis>&#949;</emphasis>. In all the other cases it is <emphasis>infrequent</emphasis> <citation>Giannella2003</citation>.
+			</para>
+			<para>We can also categorise two, more specific, groups of frequent itemsets which could simplify the frequent pattern mining process by limiting the search space thus reducing the workload.
+			</para>
+			<para>If there is no superset to a frequent itemset which has the same support, then that itemset is called a <emphasis>closed itemset</emphasis><indexterm><primary>Itemset</primary><secondary>closed itemsets</secondary></indexterm>. If given itemset has no superset that is frequent then that 
+			itemset is a <emphasis>maximal itemset</emphasis><indexterm><primary>Itemset</primary><secondary>maximal itemsets</secondary></indexterm>. There is also an obvious relation between these groups. All maximal itemsets are closed itemsets and all closed itemsets are frequent <citation>Pasquier1999</citation>.
+			</para>
+	
+		</section>
+		
+		
+		<section id="frequent pattern mining algorithms">
+			<title>Frequent pattern mining algorithms</title>
+			<para>There are many different data mining algorithms or even algorithms to specifically mine frequent patterns in big data but most of them were created for static data only. 
+			This allows the algorithms to run through the same data as many times as they need to find the best results possible.
+			</para>
+			<para>This approach, however, is not an option when working with data streams. To effectively process the fast income of big volumes of data we need algorithms that are working in online time. 
+			This can be achieved only by single pass data mining algorithms which means that most of the widely used data mining algorithms, for example Apriori, are not applicable to our problem or they would need to be 
+			greatly modified for them to work on data streams.
+			</para>
+			<para>Only a few algorithms exist, which are designed specifically for finding frequent patterns in data streams and most researchers are trying to either make them more effective 
+			or combine different approaches and representations to achieve the best result possible. We focused on the Top k elements algorithm and the different kinds of windowing algorithms 
+			as these are able to work as one pass algorithms and therefore are both good choices to use on data streams. 
+			</para>
+			<section>
+				<title>Top k elements</title> 
+				<para><indexterm><primary>Frequent pattern mining algorithms</primary><primary>Top k elements</primary><secondary>Top k elements</secondary></indexterm>This algorithm takes <emphasis>k</emphasis>, usually user specified, elements with the highest frequencies and marks them as frequent. There are several modifications to this problem, 
+				mainly to solve space issues that the original <emphasis>top k</emphasis> algorithm has <citation>Metwally2005</citation>.
+				</para>
+				<itemizedlist mark='bullet'>
+			 	<listitem>
+					<para> 
+						One of them is the <emphasis>FindCandidateTop(S, k, l)</emphasis><indexterm><primary>Top k elements</primary><secondary>FindCandidateTop</secondary></indexterm> which asks for <emphasis>l</emphasis> elements among which the <emphasis>top k</emphasis> are but there are no guarantees what the rank 
+						of remaining elements is <citation>Metwally2005</citation>. 
+					</para>
+				</listitem>
+				<listitem>
+					<para> 
+						Better, more practical, solution is the <emphasis>FindApproxTop(S, k, <emphasis>&#949;</emphasis>)</emphasis><indexterm><primary>Top k elements</primary><secondary>FindApproxTop</secondary></indexterm>. This algorithm takes the user specified <emphasis>k</emphasis> elements, so that every element in the list 
+				has <inlineequation>F<subscript>i</subscript>(1-&#949;)F<subscript>k</subscript></inlineequation>, where <emphasis>&#949;</emphasis> is user-defined error and <inlineequation>F<subscript>1</subscript>&#8805; F<subscript>2</subscript>&#8805; ... &#8805; F<subscript>|A|</subscript></inlineequation> applies so that <inlineequation>F<subscript>k</subscript></inlineequation> is the <inlineequation>k<superscript>th</superscript></inlineequation> rank element <citation>Metwally2005</citation>.
+					</para>
+				</listitem>
+				<listitem>
+					<para> 
+						The next is <emphasis>Hot Items Problem</emphasis><indexterm><primary>Top k elements</primary><secondary>Hot Items Problem</secondary></indexterm> which simply takes <emphasis>k</emphasis> elements all of which have frequency larger than <emphasis>N/(k+1)</emphasis>, where <emphasis>N</emphasis> is the size of the stream <citation>Metwally2005</citation>.
+					</para>
+				</listitem>
+				<listitem>
+					<para> 
+						Lastly, the mot popular modification of this problem is finding the <emphasis>&#949;-Deficient Frequent Elements</emphasis><indexterm><primary>Top k elements</primary><secondary>&#949;-Deficient Frequent Elements</secondary></indexterm> which finds all the elements with frequency greater 
+						than <inlineequation>(&#966; - &#949;) N</inlineequation>, where <emphasis>&#949;</emphasis> is the error, <emphasis>N</emphasis> is the size of the data stream and <inlineequation>&#966;</inlineequation> is the support <citation>Metwally2005</citation>.
+					</para>
+				</listitem>
+				</itemizedlist>
+			
+				<para>There are several specific algorithms for finding <emphasis>top k</emphasis> element but they can mostly be classified into two techniques. The counter-based and sketch-based technique <citation>Metwally2005</citation>. 
+				</para>
+				<itemizedlist mark='bullet'>
+				<listitem>
+					<para> 
+						<emphasis role="strong">Counter-based techniques</emphasis><indexterm><primary>Top k elements</primary><secondary>Counter-based technique</secondary></indexterm> are the algorithms that keep an individual counter for every element in the monitored set. The counter of a specific element is updated when the element 
+						appears in a stream. If there is no counter for given element the information is either disregarded completely or some action is taken, depending on the specific algorithm being used. 
+						Some examples of counter-based algorithms are the <emphasis>Lossy Counting</emphasis> or the <emphasis>Sticky Sampling</emphasis> algorithm <citation>Metwally2005</citation>.
+					</para>
+				</listitem>
+				<listitem>
+					<para> 
+						<emphasis role="strong">Sketch-based techniques</emphasis><indexterm><primary>Top k elements</primary><secondary>Sketch-based technique</secondary></indexterm> provide only estimation of frequencies of elements. In these algorithms elements are hashed into a bit-map of counters and with every occurrence 
+						of given element the counters are updated. The counters provide only estimation of the frequency due to hashing collisions. These algorithms monitor all elements but give no guarantees. 
+						Few examples of sketch-based algorithms are, the <emphasis>CountSketch</emphasis>, <emphasis>GroupTest</emphasis> or the <emphasis>Frequent</emphasis> algorithm <citation>Metwally2005</citation>.
+					</para>
+				</listitem>
+				</itemizedlist>
+			</section>
+			<section>
+				<title>Data windows</title>
+				<para>A different approach than the top k elements is using data windows<indexterm><primary>Frequent pattern mining algorithms</primary><secondary>Data windows</secondary></indexterm>. These can either be time period windows or counter windows which reset after a specific amount of elements has come through.
+				</para>
+				<para>For a sequence of data items, <inlineequation>T = (T<subscript>1</subscript>, T<subscript>2</subscript>, T<subscript>3</subscript>, ..., T<subscript>i</subscript>, ..., T<subscript>n</subscript>)</inlineequation> a data window is a subsequence of items in between i-th and j-th transaction, such as 
+				<inlineequation>T<subscript>i, j</subscript> = (T<subscript>i</subscript>, T<subscript>i+1</subscript>, ..., T<subscript>j</subscript>)</inlineequation>, where <inlineequation>i &#8804; j</inlineequation> <citation>Lee2014</citation>.
+				</para>
+				<para>When using data windows, user can mine different types of information without the need of doing a lot of after processing. They are especially useful when working with online data 
+				as the data constantly changes and we are usually not as interested in few years old data as we are in the most recent one.
+				</para>
+				<para>We can either make the <link linkend="time window">window time-based</link>, so we push out the old data when new data arrives, or count-based, so that we push out a number of items when we hit a limit of the counter <citation>Golab2003</citation>.
+				</para>
+				<para>All of these approaches can be divided into five slightly different algorithm groups.
+				</para>
+				<itemizedlist mark='bullet'>
+					<listitem>
+						<para> <emphasis role="strong">Fixed size windows</emphasis>
+						<indexterm><primary>Data windows</primary><secondary>Fixed size windows</secondary></indexterm>
+				 are the easiest windows to implement. They don't change their size and either show the most recent <emphasis>n</emphasis> data points or the most recent <emphasis>t</emphasis> time units of data. Even though they are the easiest 
+				 to implement they are very prone to errors when choosing incorrect width of the window. If we choose to implement too narrow window width they show very accurate results for the current state 
+				 but gather too much noise over time. On the other hand, when the chosen width of the window is too wide the results are more stable but they become very inaccurate <citation>Gaber2009</citation>.
+						</para>
+					</listitem>
+					<listitem>
+						<para> <emphasis role="strong">Adaptive windows</emphasis>
+						<indexterm><primary>Data windows</primary><secondary>Adaptive windows</secondary></indexterm>
+				 is just an upgraded version of the fixed size windows. In this case, the window changes size dynamically based on the incoming data. The resizing of windows is done by looking at the possibility 
+				 of dividing the current data window into two consecutive ones, so that <inlineequation>W<subscript>1</subscript> . W<subscript>2</subscript> = W</inlineequation>. After that, we check if the means of these windows are greater than the given threshold. 
+				 If so, the older window gets dropped. This means that an optimal width of a window is maintained at all times <citation>Bifet2007, Gaber2009</citation>.
+						</para>
+					</listitem>
+					<listitem>
+						<para> In the <emphasis role="strong">Landmark windows</emphasis>
+						<indexterm><primary>Data windows</primary><secondary>Landmark windows</secondary></indexterm>
+				 model a time point is chosen, also called landmark, and only data that appears between that landmark and current time is kept. After we hit a new landmark, all storage is reset and we start 
+				 from zero again. This approach is very unpredictable especially with data streams. The issue is, that we have no way of knowing how much data there will be in that particular time period. 
+				 We always start with no data but the build up could be very fast if there is a lot of traffic at the time  <citation>Gaber2009, Golab2003</citation>.
+						</para>
+					</listitem>
+					<listitem>
+						<para><emphasis role="strong">Damped windows</emphasis>
+						<indexterm><primary>Data windows</primary><secondary>Damped windows</secondary></indexterm>
+				 models, take all the data into consideration, but instead of simply choosing if a point should be included or not on a binary basis, we put a weight on every data point depending on it's age. 
+				 So the newest data is considered more relevant and the weight given to it is higher than to the older data. An exponential fall off is often used for this evaluation through exponentially 
+				 decaying function <citation>Cao2006, Gaber2009, Yu2009</citation>.
+						</para>
+					</listitem>
+					<listitem>
+						<para> The <emphasis role="strong">Sliding windows</emphasis>
+						<indexterm><primary>Data windows</primary><secondary>Sliding windows</secondary></indexterm>
+				 approach is based on the fact that we are usually more interested in the more recent data. The algorithm considers the more recent data at a finer granularity than the older data - like an hour 
+				 in a precision of quarters and the last day in a precision of hours etc <citation>Giannella2003</citation>.
+					</para>
+					<para>Using an approach like this is very useful as we can gather a lot of information from the data while not cluttering the results with irrelevant, old information. 
+				 With this model it is possible to mine frequent patterns in current windows, as well as mine past frequent patterns and we can also put different weights on the gathered data based on its age 
+				 and we can see the evolution of frequent patterns over time <citation>Giannella2003</citation>.
+					</para>
+					<para>Because we often can't fit all data in the current window into main memory we need some solution to deal with the space issue. One solution, initially proposed by <citation>Zhu2002</citation>, 
+				states, that we could divide the current window into few sub-windows of smaller size and store only a summary of the statistics in the main memory. We will re-evaluate the summary after 
+				the current sub-window is full. This could greatly reduce the storage needed in main memory but instead of the classic sliding window, it works more like a <emphasis>jumping window</emphasis>, 
+				where the size of a jump is the size of a current sub-window and it can increase the computation time needed with the periodic re-evaluation <citation>Golab2003</citation>.
+					<figure id="time window">
+						<title>Example of time window <citation>Aggarwal2007</citation></title>
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="figures/time_windows.png"/>
+							</imageobject>
+							<textobject><phrase>Example of time window</phrase></textobject>
+						</mediaobject>
+					</figure>
+						</para>
+					</listitem>
+				</itemizedlist>
+			</section>
+		</section>
+		<section>
+			<title>Association rule mining</title>
+			<para>Association rule mining<indexterm><primary>Association rule mining</primary></indexterm> is another type of frequent pattern mining, specifically the mining of subsequences. It consists of two steps, the first being detecting frequent itemsets, 
+			possibly from historical data and after that deriving association rules from the itemsets.
+			</para>
+			<para>An association rule is an implication <inlineequation>X<graphic fileref="figures/implication.png"/>Y</inlineequation>, where for a given <emphasis>confidence</emphasis> threshold <emphasis>c</emphasis>, <inlineequation>0 &lt; c &lt; 1</inlineequation>, and <emphasis>data stream</emphasis> <emphasis>S</emphasis> where <emphasis>X</emphasis> is an <emphasis>itemset</emphasis> 
+			and <emphasis>Y</emphasis> is an <emphasis>item</emphasis> that does not appear in <emphasis>X</emphasis>. The rule <inlineequation>X <graphic fileref="figures/implication.png"/> Y</inlineequation> holds, if at least <inlineequation>c&#37;</inlineequation> of transactions in <emphasis>S</emphasis> that contains <emphasis>X</emphasis>, contains <emphasis>Y</emphasis> as well, while <inlineequation>X ∪ Y</inlineequation> is frequent. 
+			<emphasis>X</emphasis> is called <emphasis>antecedent</emphasis> and <emphasis>Y</emphasis> is called <emphasis>consequent</emphasis> <citation>Agrawal1993, Yu2009</citation>.
+			</para>
+			<para>When mining the data, we are usually interested in finding only those rules that satisfy certain additional constraints. These can take two forms: 
+			</para>
+			<itemizedlist mark='bullet'>
+					<listitem>
+						<para> <emphasis role="strong">Syntactic constraints</emphasis><indexterm><primary>Constraints</primary><secondary>syntactic constraints</secondary></indexterm> involve restrictions that give the specific items we want to see in a rule. These could be items that should appear on either side of the relation <inlineequation>X <graphic fileref="figures/implication.png"/> Y</inlineequation>.
+						</para>
+					</listitem>
+					<listitem>
+						<para><emphasis role="strong">Support constraints</emphasis><indexterm><primary>Constraints</primary><secondary>support constraints</secondary></indexterm> involve restriction that imply what the support threshold should be for a rule to hold <citation>Agrawal1993</citation>.
+						</para>
+					</listitem>						
+			</itemizedlist>
+		
+			<para>In order to find interesting rules in the data we might need few different measurements. We already explained confidence and support when talking about frequent patterns in general, 
+			the other useful ones are <emphasis>lift</emphasis> and <emphasis>conviction</emphasis>.
+			</para>
+			<para><emphasis>Conviction</emphasis><indexterm><primary>Conviction</primary></indexterm> is the ratio of how frequently <emphasis>X</emphasis> appears without <emphasis>Y</emphasis>, so the frequency of the given rule being incorrect. It is defined by the equation:
+				<equation><title>Conviction</title>
+					<graphic fileref="figures/conviction.png"/>
+				</equation>
+			</para>
+			<para>On the other hand, <emphasis>lift</emphasis><indexterm><primary>Lift</primary></indexterm> is the measurement of independence of itemsets <emphasis>X</emphasis> and <emphasis>Y</emphasis>. It is given by the equation:
+				<equation><title>Lift</title>
+					<graphic fileref="figures/lift.png"/>
+				</equation>
+			</para>
+			<para>The lift is useful because it considers confidence of the whole dataset as well as the rule. If lift is equal to 1, it means that the probability of occurrence of <emphasis>X</emphasis> and <emphasis>Y</emphasis> are independent, 
+			so no rule can be deduced from them. If the value of the lift is more than 1 it says the degree of dependence of <emphasis>X</emphasis> and <emphasis>Y</emphasis> and it could be useful when predicting their future occurrences <citation>Hahsler2005</citation>.
+			</para>
+		</section>
+    </chapter>
+
+	<index><title>Index</title></index>
+  <bibliography>
+    <title>Literature</title>
+
+	<bibliomixed><abbrev>Aggarwal2007</abbrev>Aggarwal, Cham C and Wang, Jianyong. <title>Data Streams: Models and Algorithms</title>. Data Streams 31: 9-38, 2007</bibliomixed>
+	
+	<bibliomixed><abbrev>Becker2016</abbrev>Becker, Tilman and Curry, Edward and Jentzsch, Anja and Palmetshofer, Walter. 
+	<title>New Horizons for a Data-Driven Economy: Roadmaps and Action Plans for Technology, Businesses, Policy, and Society</title>, 2016</bibliomixed>
+	
+	<bibliomixed><abbrev>Yu2009</abbrev>Yu, Philip S. and Chi, Yun. <title>Association Rule Mining on Streams</title>. Encyclopedia of Database Systems: 1-9, 2009</bibliomixed>
+	
+	<bibliomixed><abbrev>Hahsler2005</abbrev>Hahsler, Michael and Grun, Bettina and Hornik, Kurt. 
+	<title>Introduction to arules – A computational environment for mining association rules and frequent item sets</title>. Journal of Statistical Software 15: 1-25, 2005</bibliomixed>
+	
+	<bibliomixed><abbrev>Agrawal1993</abbrev>Agrawal, R and Imielinski, T and Swami, A. 
+	<title>{Mining association rules between sets of items in large databases</title>. ACM SIGMOD Record May: 207-216, 1993</bibliomixed>
+	
+	<bibliomixed><abbrev>Golab2003</abbrev>Golab, Lukasz and DeHaan, David and Demaine, Erik D. and Lopez-Ortiz, Alejandro and Munro, J. Ian. 
+	<title>Identifying frequent items in sliding windows over on-line packet streams</title>. Proceedings of the 2003 ACM SIGCOMM conference on Internet measurement - IMC '03: 173, 2003</bibliomixed>
+
+	<bibliomixed><abbrev>Zhu2002</abbrev>Zhu, Yunyue and Shasha, Dennis. <title>StatStream: Statistical Monitoring of Thousands of Data Streams in Real Time</title>
+	. Proceedings of the 28th international conference on Very Large Data Bases 2 54: 358-369, 2002</bibliomixed>
+
+	<bibliomixed><abbrev>Giannella2003</abbrev>Giannella, Chris and Han, Jiawei and Yan, Xifeng and Yu, Philip S. 
+	<title>Mining Frequent Patterns in Data Streams at Multiple Time Granularities</title>. Next generation data mining: 191-212, 2003</bibliomixed>
+
+	<bibliomixed><abbrev>Gaber2009</abbrev>Gaber, Mohamed Medhat and Zaslavsky, Arkady and Krishnaswamy, Shonali. 
+	<title>Data Stream Mining overview</title>. Data Mining and Knowledge Discovery Handbook 8: 759-787, 2009</bibliomixed>
+
+	<bibliomixed><abbrev>Cao2006</abbrev>Cao, F. and Ester, M. and Qian, W. and Zhou, A.. <title>Density-based clustering over an evolving data stream with noise</title>
+	. Proceedings of the Sixth SIAM International Conference on Data Mining: 328-339, 2006</bibliomixed>
+
+	<bibliomixed><abbrev>Bifet2007</abbrev>Bifet, Albert and Gavalda, Ricard and Gavalda, Ricard. <title>Learning from Time-Changing Data with Adaptive Windowing</title>
+	. Sdm 7, 2007</bibliomixed>
+
+	<bibliomixed><abbrev>Metwally2005</abbrev>Metwally, Ahmed and Abbadi, Amr El. <title>Efficient Computation of Frequent and Top- k Elements in Data Streams</title>
+	. 398-412, 2005</bibliomixed>
+
+	<bibliomixed><abbrev>Lee2014</abbrev>Lee, Victor E and Jin, Ruoming and Agrawal, Gagan. <title>Frequent Pattern Mining</title>. 199, 2014</bibliomixed>
+
+	<bibliomixed><abbrev>Pasquier1999</abbrev>Pasquier, Nicolas and Bastide, Yves and Taouil, Rafik and Lakhal, Lotfi. 
+	<title>Discovering Frequent Closed Itemsets for Association Rules</title>. Icdt: 398-416, 1999</bibliomixed>
+
+  </bibliography>
+</book>
